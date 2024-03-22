@@ -51,8 +51,8 @@ impl<T: Ord> Tree<T> {
 						return
 					}
 
-					let left = root.left.unwrap();
-					let right = root.right.unwrap();
+					let left = root.left.as_mut().unwrap();
+					let right = root.right.as_mut().unwrap();
 			
 					if left.value > value {
 						root = left;
@@ -66,10 +66,29 @@ impl<T: Ord> Tree<T> {
 	}
 }
 
-fn main() {	
-	let mut tree: Tree::<i32> = Tree::new();
+#[cfg(test)]
+mod tests {
+	use super::*;
 
-	tree.insert(420);
+	#[test]
+	pub fn tree_creation_should_work() {
+		let mut tree: Tree::<i32> = Tree::new();
 
-	println!("{:?}", tree);
+		tree.insert(420);
+		tree.insert(69);
+		tree.insert(100);
+		tree.insert(1337);
+
+		assert!(tree.root.is_some());
+	}
+
+	#[test]
+	pub fn tree_when_created_should_have_correct_nodes() {
+		let mut tree: Tree::<i32> = Tree::new();
+
+		tree.insert(420);
+		tree.insert(69);
+
+		assert_eq!(tree.root.unwrap().left.unwrap().value, 69)
+	}
 }
